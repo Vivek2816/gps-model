@@ -1,22 +1,35 @@
-<script>
-const BUS_ID = 'bus1';              // unique bus ID
-const TOKEN = 'driver-secret-123';  // must match server token
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Driver GPS Sender</title>
+</head>
+<body>
+  <h2>Driver Location Sharing Active...</h2>
+  <p>Keep this page open. Your location is being shared.</p>
 
-if (navigator.geolocation) {
-  navigator.geolocation.watchPosition(pos => {
-    const payload = {
-      busId: BUS_ID,
-      token: TOKEN,
-      lat: pos.coords.latitude,
-      lon: pos.coords.longitude
-    };
-    fetch('/update-location', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-  }, err => alert('Location error: ' + err.message), { enableHighAccuracy: true, maximumAge: 1000 });
-} else {
-  alert('Geolocation not supported.');
-}
-</script>
+  <script>
+    const BUS_ID = 'bus1';
+    const TOKEN = 'driver-secret-123';
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(pos => {
+        fetch('/update-location', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            busId: BUS_ID,
+            token: TOKEN,
+            lat: pos.coords.latitude,
+            lon: pos.coords.longitude
+          })
+        }).catch(err => console.error(err));
+      }, err => alert('Location error: ' + err.message), {
+        enableHighAccuracy: true,
+        maximumAge: 1000
+      });
+    } else {
+      alert('Geolocation not supported.');
+    }
+  </script>
+</body>
+</html>

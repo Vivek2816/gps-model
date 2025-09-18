@@ -1,0 +1,22 @@
+<script>
+const BUS_ID = 'bus1';              // unique bus ID
+const TOKEN = 'driver-secret-123';  // must match server token
+
+if (navigator.geolocation) {
+  navigator.geolocation.watchPosition(pos => {
+    const payload = {
+      busId: BUS_ID,
+      token: TOKEN,
+      lat: pos.coords.latitude,
+      lon: pos.coords.longitude
+    };
+    fetch('/update-location', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+  }, err => alert('Location error: ' + err.message), { enableHighAccuracy: true, maximumAge: 1000 });
+} else {
+  alert('Geolocation not supported.');
+}
+</script>

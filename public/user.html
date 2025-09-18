@@ -1,0 +1,17 @@
+<script>
+var map = L.map("map").setView([0,0], 2);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+var marker = L.marker([0,0]).addTo(map).bindPopup("Bus Location");
+
+function updateBus() {
+  fetch('/bus-location/bus1')
+    .then(r => r.json())
+    .then(d => {
+      marker.setLatLng([d.lat, d.lon]);
+      map.setView([d.lat, d.lon], 15);
+    })
+    .catch(()=>console.log('Waiting for bus location...'));
+}
+
+setInterval(updateBus, 3000);
+</script>
